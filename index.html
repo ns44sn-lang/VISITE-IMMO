@@ -3,783 +3,913 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fiche de Visite Immobilière</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <title>Visite Immobilière</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=Sarabun:wght@300;400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --cream: #f5f0e8;
-      --dark: #1a1a18;
-      --accent: #c8873a;
-      --accent-light: #e8b97a;
-      --muted: #7a7570;
-      --card: #ffffff;
-      --border: #e2ddd5;
-      --good: #4a8c6f;
-      --neutral: #c8a84b;
-      --bad: #b85040;
+      --cream: #f5f0e8; --dark: #1a1a18; --accent: #c8873a;
+      --accent-light: #e8b97a; --muted: #7a7570; --card: #ffffff;
+      --border: #e2ddd5; --good: #4a8c6f; --neutral: #c8a84b; --bad: #b85040;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans','Sarabun',sans-serif; background:var(--cream); color:var(--dark); min-height:100vh; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+    .fade-in { animation: fadeIn 0.4s ease both; }
 
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--cream);
-      color: var(--dark);
-      min-height: 100vh;
-      padding: 0 0 60px;
+    /* ─── LANDING ─── */
+    #landing {
+      min-height:100vh; display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      background:var(--dark); padding:40px 20px 60px;
+      position:relative; overflow:hidden;
     }
+    #landing::before { content:''; position:absolute; top:-100px; right:-100px; width:500px; height:500px; border:80px solid rgba(200,135,58,0.07); border-radius:50%; }
+    #landing::after  { content:''; position:absolute; bottom:-80px; left:-80px; width:350px; height:350px; border:60px solid rgba(200,135,58,0.05); border-radius:50%; }
+    .landing-inner { position:relative; z-index:1; max-width:580px; width:100%; text-align:center; }
+    .landing-badge {
+      display:inline-block; font-size:10px; letter-spacing:3px;
+      text-transform:uppercase; color:var(--accent);
+      border:1px solid rgba(200,135,58,0.35); padding:5px 16px;
+      border-radius:20px; margin-bottom:24px;
+    }
+    .landing-title { font-family:'Playfair Display',serif; font-size:clamp(30px,6vw,52px); font-weight:400; color:var(--cream); line-height:1.1; margin-bottom:10px; }
+    .landing-title em { font-style:italic; color:var(--accent-light); }
+    .landing-sub { font-size:14px; color:rgba(245,240,232,0.4); margin-bottom:44px; font-weight:300; }
+    .step-label { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:rgba(245,240,232,0.3); margin-bottom:12px; }
+    .step-title { font-family:'Playfair Display',serif; font-size:19px; color:var(--cream); margin-bottom:18px; font-weight:400; }
 
-    /* HEADER */
-    .hero {
-      background: var(--dark);
-      color: var(--cream);
-      padding: 48px 40px 40px;
-      position: relative;
-      overflow: hidden;
+    /* Country grid */
+    .country-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-bottom:36px; }
+    @media(max-width:480px){.country-grid{grid-template-columns:1fr;}}
+    .country-card {
+      border:1.5px solid rgba(245,240,232,0.1); border-radius:14px;
+      padding:22px 12px; cursor:pointer; transition:all 0.25s;
+      background:rgba(255,255,255,0.03); text-align:center; user-select:none;
     }
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: -60px; right: -60px;
-      width: 260px; height: 260px;
-      border: 40px solid rgba(200,135,58,0.15);
-      border-radius: 50%;
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -40px; left: 30%;
-      width: 140px; height: 140px;
-      border: 25px solid rgba(200,135,58,0.08);
-      border-radius: 50%;
-    }
-    .hero-inner { max-width: 720px; margin: 0 auto; position: relative; z-index: 1; }
-    .hero-label {
-      font-size: 11px;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 12px;
-    }
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(28px, 5vw, 44px);
-      font-weight: 400;
-      line-height: 1.15;
-      margin-bottom: 10px;
-    }
-    .hero h1 em { font-style: italic; color: var(--accent-light); }
-    .hero p {
-      font-size: 14px;
-      color: rgba(245,240,232,0.55);
-      font-weight: 300;
-    }
+    .country-card:hover { border-color:var(--accent); background:rgba(200,135,58,0.08); transform:translateY(-2px); }
+    .country-card.selected { border-color:var(--accent); background:rgba(200,135,58,0.14); }
+    .country-flag { font-size:38px; margin-bottom:8px; }
+    .country-name { font-size:14px; font-weight:600; color:var(--cream); margin-bottom:3px; }
+    .country-currency { font-size:10px; color:rgba(245,240,232,0.35); }
 
-    /* FORM WRAPPER */
-    .form-wrap { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+    /* Lang grid */
+    #step2 { display:none; }
+    .lang-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:28px; }
+    @media(max-width:480px){.lang-grid{grid-template-columns:1fr;}}
+    .lang-card {
+      border:1.5px solid rgba(245,240,232,0.1); border-radius:12px;
+      padding:16px 10px; cursor:pointer; transition:all 0.2s;
+      background:rgba(255,255,255,0.03); text-align:center; user-select:none;
+    }
+    .lang-card:hover { border-color:var(--accent); background:rgba(200,135,58,0.08); }
+    .lang-card.selected { border-color:var(--accent); background:rgba(200,135,58,0.15); }
+    .lang-flag { font-size:26px; margin-bottom:5px; }
+    .lang-name { font-size:12px; font-weight:600; color:var(--cream); }
+    .btn-start {
+      display:none; font-family:'DM Sans',sans-serif; font-size:14px; font-weight:600;
+      letter-spacing:1.5px; text-transform:uppercase; background:var(--accent);
+      color:#fff; border:none; padding:17px 46px; border-radius:12px;
+      cursor:pointer; transition:all 0.2s;
+    }
+    .btn-start.visible { display:inline-block; animation:fadeUp 0.3s ease both; }
+    .btn-start:hover { background:var(--accent-light); transform:translateY(-2px); box-shadow:0 8px 24px rgba(200,135,58,0.3); }
 
-    /* SECTIONS */
-    .section {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 32px;
-      margin-top: 24px;
-      border: 1px solid var(--border);
-      animation: fadeUp 0.4s ease both;
+    /* ─── FORM PAGE ─── */
+    #formPage { display:none; padding-bottom:60px; }
+    .top-bar {
+      background:var(--dark); padding:9px 22px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px; flex-wrap:wrap;
     }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
+    .top-bar-left { display:flex; align-items:center; gap:8px; }
+    .top-bar-flag { font-size:20px; }
+    .top-bar-name { font-size:13px; font-weight:600; color:var(--cream); }
+    .top-bar-right { display:flex; gap:5px; align-items:center; }
+    .lang-btn {
+      background:transparent; border:1.5px solid rgba(245,240,232,0.18);
+      color:rgba(245,240,232,0.55); font-family:'DM Sans',sans-serif;
+      font-size:10px; font-weight:600; padding:4px 9px; border-radius:20px;
+      cursor:pointer; transition:all 0.2s;
     }
-    .section:nth-child(2) { animation-delay: 0.05s; }
-    .section:nth-child(3) { animation-delay: 0.10s; }
-    .section:nth-child(4) { animation-delay: 0.15s; }
-    .section:nth-child(5) { animation-delay: 0.20s; }
+    .lang-btn:hover { border-color:var(--accent); color:var(--accent); }
+    .lang-btn.active { background:var(--accent); border-color:var(--accent); color:#fff; }
+    .btn-back {
+      font-family:'DM Sans',sans-serif; font-size:10px; font-weight:600;
+      background:transparent; border:1.5px solid rgba(245,240,232,0.12);
+      color:rgba(245,240,232,0.4); padding:4px 12px; border-radius:20px;
+      cursor:pointer; transition:all 0.2s;
+    }
+    .btn-back:hover { color:var(--cream); border-color:rgba(245,240,232,0.4); }
 
-    .section-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 24px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--border);
-    }
-    .section-icon {
-      width: 36px; height: 36px;
-      background: var(--dark);
-      color: var(--accent);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      flex-shrink: 0;
-    }
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 18px;
-      font-weight: 400;
-    }
-    .section-sub {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: 2px;
-    }
+    /* Hero */
+    .hero { background:var(--dark); color:var(--cream); padding:30px 36px; position:relative; overflow:hidden; }
+    .hero::before { content:''; position:absolute; top:-60px; right:-60px; width:240px; height:240px; border:36px solid rgba(200,135,58,0.1); border-radius:50%; }
+    .hero-inner { max-width:720px; margin:0 auto; position:relative; z-index:1; }
+    .hero-label { font-size:10px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+    .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(20px,4vw,34px); font-weight:400; line-height:1.15; margin-bottom:5px; }
+    .hero h1 em { font-style:italic; color:var(--accent-light); }
+    .hero p { font-size:13px; color:rgba(245,240,232,0.45); font-weight:300; }
 
-    /* GRID */
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
-    @media (max-width: 520px) {
-      .grid-2, .grid-3 { grid-template-columns: 1fr; }
-    }
+    /* Sections */
+    .form-wrap { max-width:720px; margin:0 auto; padding:0 18px; }
+    .section { background:var(--card); border-radius:14px; padding:26px; margin-top:18px; border:1px solid var(--border); }
+    .section-header { display:flex; align-items:center; gap:10px; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+    .section-icon { width:32px; height:32px; background:var(--dark); color:var(--accent); border-radius:7px; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+    .section-title { font-family:'Playfair Display',serif; font-size:16px; font-weight:400; }
+    .section-sub { font-size:11px; color:var(--muted); margin-top:1px; }
 
-    /* FIELDS */
-    .field { display: flex; flex-direction: column; gap: 6px; }
-    .field label {
-      font-size: 11px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--muted);
-      font-weight: 500;
-    }
-    .field input,
-    .field select,
-    .field textarea {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      padding: 10px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 8px;
-      background: var(--cream);
-      color: var(--dark);
-      transition: border-color 0.2s, box-shadow 0.2s;
-      outline: none;
-      width: 100%;
-    }
-    .field input:focus,
-    .field select:focus,
-    .field textarea:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(200,135,58,0.12);
-    }
-    .field textarea { resize: vertical; min-height: 80px; }
+    .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:13px; }
+    .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:13px; }
+    @media(max-width:520px){.grid-2,.grid-3{grid-template-columns:1fr;}}
 
-    /* TYPE SELECTOR */
-    .type-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
+    .field { display:flex; flex-direction:column; gap:5px; }
+    .field label { font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); font-weight:500; }
+    .field input,.field select,.field textarea {
+      font-family:'DM Sans','Sarabun',sans-serif; font-size:14px;
+      padding:9px 12px; border:1.5px solid var(--border); border-radius:8px;
+      background:var(--cream); color:var(--dark);
+      transition:border-color 0.2s,box-shadow 0.2s; outline:none; width:100%;
     }
-    @media (max-width: 520px) { .type-grid { grid-template-columns: 1fr 1fr; } }
-    .type-btn {
-      border: 1.5px solid var(--border);
-      background: var(--cream);
-      border-radius: 10px;
-      padding: 12px 8px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      user-select: none;
-    }
-    .type-btn input { display: none; }
-    .type-btn .icon { font-size: 22px; margin-bottom: 4px; }
-    .type-btn .label { font-size: 12px; font-weight: 500; color: var(--muted); }
-    .type-btn:hover { border-color: var(--accent-light); }
-    .type-btn.selected {
-      border-color: var(--accent);
-      background: #fff8f0;
-    }
-    .type-btn.selected .label { color: var(--accent); }
+    .field input:focus,.field select:focus,.field textarea:focus { border-color:var(--accent); box-shadow:0 0 0 3px rgba(200,135,58,0.12); }
+    .field textarea { resize:vertical; min-height:70px; }
 
-    /* RATING STARS */
-    .star-field { margin-bottom: 4px; }
-    .star-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--border);
+    /* Currency conversion box */
+    .price-convert {
+      margin-top:10px; background:linear-gradient(135deg,#1a1a18,#252520);
+      border-radius:12px; padding:15px 16px; display:none;
+      border:1px solid rgba(200,135,58,0.15);
     }
-    .star-row:last-child { border-bottom: none; }
-    .star-name {
-      font-size: 13px;
-      font-weight: 500;
-      flex: 1;
-      min-width: 120px;
-    }
-    .stars {
-      display: flex;
-      gap: 4px;
-    }
-    .stars input { display: none; }
-    .stars label {
-      font-size: 22px;
-      color: #d9d3c9;
-      cursor: pointer;
-      transition: color 0.15s, transform 0.1s;
-      line-height: 1;
-    }
-    .stars label:hover,
-    .stars label:hover ~ label,
-    .stars input:checked ~ label { /* reversed via CSS trick */ }
-    /* reversed star trick */
-    .stars { flex-direction: row-reverse; justify-content: flex-end; }
-    .stars label:hover,
-    .stars label:hover ~ label { color: var(--accent-light); }
-    .stars input:checked ~ label { color: var(--accent); }
-    .star-comment {
-      font-size: 12px;
-      padding: 6px 10px;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: var(--cream);
-      color: var(--dark);
-      outline: none;
-      width: 140px;
-      font-family: 'DM Sans', sans-serif;
-      transition: border-color 0.2s;
-    }
-    .star-comment:focus { border-color: var(--accent); }
-    @media (max-width: 520px) { .star-comment { width: 80px; } }
+    .price-convert.visible { display:block; animation:fadeIn 0.3s ease; }
+    .conv-header { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:rgba(200,135,58,0.65); margin-bottom:12px; }
+    .conv-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    @media(max-width:460px){.conv-grid{grid-template-columns:1fr;}}
+    .conv-item { text-align:center; padding:8px 4px; }
+    .conv-currency { font-size:9px; color:rgba(245,240,232,0.3); letter-spacing:1px; text-transform:uppercase; margin-bottom:3px; }
+    .conv-amount { font-family:'Playfair Display',serif; font-size:19px; color:var(--cream); }
+    .conv-sym { font-size:12px; color:var(--accent); margin-left:2px; font-family:'DM Sans',sans-serif; }
 
-    /* SCORE BADGE */
-    .score-display {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      padding: 20px;
-      background: var(--dark);
-      border-radius: 12px;
-      margin-top: 20px;
+    /* Price m2 box */
+    .price-m2-box {
+      margin-top:8px; background:rgba(200,135,58,0.07);
+      border:1px solid rgba(200,135,58,0.2); border-radius:10px;
+      padding:12px 14px; display:none;
     }
-    .score-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 48px;
-      color: var(--accent);
-      line-height: 1;
-    }
-    .score-label { font-size: 12px; color: rgba(245,240,232,0.5); }
-    .score-bar-wrap { flex: 1; }
-    .score-bar {
-      height: 6px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .score-bar-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--accent-light));
-      border-radius: 99px;
-      transition: width 0.4s ease;
-      width: 0%;
-    }
-    .score-verdict {
-      font-size: 13px;
-      color: rgba(245,240,232,0.7);
-      margin-top: 6px;
-    }
+    .price-m2-box.visible { display:block; animation:fadeIn 0.3s ease; }
+    .m2-header { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:var(--accent); margin-bottom:10px; opacity:0.75; }
+    .m2-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    @media(max-width:460px){.m2-grid{grid-template-columns:1fr;}}
+    .m2-item { text-align:center; }
+    .m2-label { font-size:9px; letter-spacing:1px; text-transform:uppercase; color:var(--muted); margin-bottom:2px; }
+    .m2-value { font-size:15px; font-weight:600; color:var(--accent); }
 
-    /* DECISION */
-    .decision-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+    /* Map */
+    .map-btn {
+      font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600;
+      background:var(--dark); color:var(--cream); border:none;
+      padding:8px 16px; border-radius:7px; cursor:pointer;
+      transition:background 0.2s; margin-top:9px; display:inline-block;
     }
-    .decision-btn {
-      padding: 16px 10px;
-      border-radius: 10px;
-      border: 1.5px solid var(--border);
-      background: var(--cream);
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s;
-      user-select: none;
-    }
-    .decision-btn input { display: none; }
-    .decision-btn .d-icon { font-size: 24px; margin-bottom: 4px; }
-    .decision-btn .d-label { font-size: 12px; font-weight: 600; }
-    .decision-btn[data-val="oui"].selected { border-color: var(--good); background: #f0faf5; }
-    .decision-btn[data-val="peut-etre"].selected { border-color: var(--neutral); background: #fffbf0; }
-    .decision-btn[data-val="non"].selected { border-color: var(--bad); background: #fdf5f4; }
+    .map-btn:hover { background:var(--accent); }
+    #map { width:100%; height:250px; border-radius:10px; border:1.5px solid var(--border); margin-top:9px; background:#e8e4dc; display:none; overflow:hidden; }
+    #map.visible { display:block; }
+    #map iframe { width:100%; height:100%; border:none; }
 
-    /* SUBMIT */
-    .submit-wrap { text-align: center; margin-top: 32px; }
+    /* Type buttons */
+    .type-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; }
+    @media(max-width:460px){.type-grid{grid-template-columns:1fr 1fr;}}
+    .type-btn { border:1.5px solid var(--border); background:var(--cream); border-radius:9px; padding:9px 5px; cursor:pointer; text-align:center; transition:all 0.2s; user-select:none; }
+    .type-btn input { display:none; }
+    .type-btn .icon { font-size:19px; margin-bottom:3px; }
+    .type-btn .lbl { font-size:10px; font-weight:500; color:var(--muted); }
+    .type-btn:hover { border-color:var(--accent-light); }
+    .type-btn.selected { border-color:var(--accent); background:#fff8f0; }
+    .type-btn.selected .lbl { color:var(--accent); }
+
+    /* Stars */
+    .star-row { display:flex; align-items:center; gap:8px; padding:8px 0; border-bottom:1px solid var(--border); }
+    .star-row:last-child { border-bottom:none; }
+    .star-name { font-size:12px; font-weight:500; flex:1; min-width:95px; }
+    .stars { display:flex; flex-direction:row-reverse; justify-content:flex-end; gap:2px; }
+    .stars input { display:none; }
+    .stars label { font-size:19px; color:#d9d3c9; cursor:pointer; transition:color 0.15s; line-height:1; }
+    .stars label:hover,.stars label:hover~label { color:var(--accent-light); }
+    .stars input:checked~label { color:var(--accent); }
+    .star-comment { font-size:11px; padding:4px 8px; border:1px solid var(--border); border-radius:6px; background:var(--cream); color:var(--dark); outline:none; width:110px; font-family:'DM Sans','Sarabun',sans-serif; transition:border-color 0.2s; }
+    .star-comment:focus { border-color:var(--accent); }
+    @media(max-width:520px){.star-comment{width:65px;}}
+
+    /* Score */
+    .score-display { display:flex; align-items:center; gap:14px; padding:16px; background:var(--dark); border-radius:11px; margin-top:14px; }
+    .score-num { font-family:'Playfair Display',serif; font-size:40px; color:var(--accent); line-height:1; }
+    .score-small { font-size:11px; color:rgba(245,240,232,0.38); }
+    .score-bar-wrap { flex:1; }
+    .score-bar { height:5px; background:rgba(255,255,255,0.1); border-radius:99px; overflow:hidden; }
+    .score-bar-fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-light)); border-radius:99px; transition:width 0.4s; width:0%; }
+    .score-verdict { font-size:12px; color:rgba(245,240,232,0.6); margin-top:5px; }
+
+    /* Decision */
+    .decision-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+    .decision-btn { padding:13px 8px; border-radius:9px; border:1.5px solid var(--border); background:var(--cream); cursor:pointer; text-align:center; transition:all 0.2s; user-select:none; }
+    .decision-btn input { display:none; }
+    .decision-btn .d-icon { font-size:20px; margin-bottom:3px; }
+    .decision-btn .d-label { font-size:11px; font-weight:600; }
+    .decision-btn[data-val="oui"].selected { border-color:var(--good); background:#f0faf5; }
+    .decision-btn[data-val="peut-etre"].selected { border-color:var(--neutral); background:#fffbf0; }
+    .decision-btn[data-val="non"].selected { border-color:var(--bad); background:#fdf5f4; }
+
+    .mt10 { margin-top:10px; }
+    .mt14 { margin-top:14px; }
+
+    /* Submit */
+    .submit-wrap { text-align:center; margin-top:26px; }
     .btn-submit {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      background: var(--dark);
-      color: var(--cream);
-      border: none;
-      padding: 16px 48px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s;
-      position: relative;
-      overflow: hidden;
+      font-family:'DM Sans',sans-serif; font-size:13px; font-weight:600;
+      letter-spacing:1.5px; text-transform:uppercase;
+      background:var(--dark); color:var(--cream);
+      border:none; padding:15px 42px; border-radius:10px;
+      cursor:pointer; transition:all 0.2s;
+      position:relative; overflow:hidden;
     }
-    .btn-submit::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: var(--accent);
-      transform: translateX(-100%);
-      transition: transform 0.3s;
-    }
-    .btn-submit:hover::after { transform: translateX(0); }
-    .btn-submit span { position: relative; z-index: 1; }
-    .btn-submit:hover { transform: translateY(-1px); }
-    .btn-submit:active { transform: translateY(0); }
+    .btn-submit::after { content:''; position:absolute; inset:0; background:var(--accent); transform:translateX(-100%); transition:transform 0.3s; }
+    .btn-submit:hover::after { transform:translateX(0); }
+    .btn-submit span { position:relative; z-index:1; }
 
-    /* PRINT RESULT */
-    #result {
-      display: none;
-      margin-top: 24px;
-      background: var(--dark);
-      color: var(--cream);
-      border-radius: 16px;
-      padding: 32px;
-      font-size: 13px;
-    }
-    #result h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 22px;
-      margin-bottom: 16px;
-      color: var(--accent-light);
-    }
-    #result pre {
-      white-space: pre-wrap;
-      line-height: 1.8;
-      color: rgba(245,240,232,0.8);
-    }
-    .result-actions { display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap; }
-    .btn-action {
-      font-family: 'DM Sans', sans-serif;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      border: 1.5px solid rgba(245,240,232,0.3);
-      background: transparent;
-      color: var(--cream);
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-action:hover { background: var(--accent); border-color: var(--accent); }
+    /* Result */
+    #result { display:none; margin-top:18px; background:var(--dark); color:var(--cream); border-radius:14px; padding:26px; }
+    #result h2 { font-family:'Playfair Display',serif; font-size:19px; margin-bottom:12px; color:var(--accent-light); }
+    #result pre { white-space:pre-wrap; line-height:1.75; color:rgba(245,240,232,0.8); font-size:12px; }
+    .result-actions { display:flex; gap:9px; margin-top:14px; flex-wrap:wrap; }
+    .btn-action { font-family:'DM Sans',sans-serif; font-size:11px; font-weight:600; letter-spacing:1px; text-transform:uppercase; border:1.5px solid rgba(245,240,232,0.22); background:transparent; color:var(--cream); padding:8px 16px; border-radius:7px; cursor:pointer; transition:all 0.2s; }
+    .btn-action:hover { background:var(--accent); border-color:var(--accent); }
 
-    .mt16 { margin-top: 16px; }
+    @media print {
+      .top-bar,.hero,.submit-wrap,.result-actions,#landing,.map-btn{display:none!important}
+      #result{display:block!important;background:#fff;color:#000;border:1px solid #ccc;}
+      .section{break-inside:avoid;}
+    }
   </style>
 </head>
 <body>
 
-<div class="hero">
-  <div class="hero-inner">
-    <div class="hero-label">Fiche de visite</div>
-    <h1>Rapport de visite<br><em>immobilière</em></h1>
-    <p>Remplissez cette fiche pendant ou après chaque visite pour comparer et décider sereinement.</p>
+<!-- ═══════════════ LANDING ═══════════════ -->
+<div id="landing">
+  <div class="landing-inner">
+    <div class="landing-badge">Immobilier · Real Estate · อสังหาริมทรัพย์</div>
+    <h1 class="landing-title">Fiche de visite<br><em>immobilière</em></h1>
+    <p class="landing-sub">Comparez vos visites · Compare your visits · เปรียบเทียบการเยี่ยมชม</p>
+
+    <!-- STEP 1 -->
+    <div id="step1">
+      <div class="step-label">Étape 1 / Step 1 / ขั้นตอนที่ 1</div>
+      <div class="step-title">Choisissez votre pays · Choose your country · เลือกประเทศ</div>
+      <div class="country-grid">
+        <div class="country-card" onclick="selectCountry('fr')" id="cc-fr">
+          <div class="country-flag">🇫🇷</div>
+          <div class="country-name">France</div>
+          <div class="country-currency">€ Euro → $ USD · ฿ THB</div>
+        </div>
+        <div class="country-card" onclick="selectCountry('pt')" id="cc-pt">
+          <div class="country-flag">🇵🇹</div>
+          <div class="country-name">Portugal</div>
+          <div class="country-currency">€ Euro → $ USD · ฿ THB</div>
+        </div>
+        <div class="country-card" onclick="selectCountry('th')" id="cc-th">
+          <div class="country-flag">🇹🇭</div>
+          <div class="country-name">Thaïlande</div>
+          <div class="country-currency">฿ THB → € Euro · $ USD</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2">
+      <div class="step-label">Étape 2 / Step 2 / ขั้นตอนที่ 2</div>
+      <div class="step-title">Langue du formulaire · Form language · ภาษาของแบบฟอร์ม</div>
+      <div class="lang-grid">
+        <div class="lang-card" onclick="selectLang('fr')" id="lc-fr">
+          <div class="lang-flag">🇫🇷</div>
+          <div class="lang-name">Français</div>
+        </div>
+        <div class="lang-card" onclick="selectLang('en')" id="lc-en">
+          <div class="lang-flag">🇬🇧</div>
+          <div class="lang-name">English</div>
+        </div>
+        <div class="lang-card" onclick="selectLang('th')" id="lc-th">
+          <div class="lang-flag">🇹🇭</div>
+          <div class="lang-name">ภาษาไทย</div>
+        </div>
+      </div>
+      <button class="btn-start" id="btnStart" onclick="startForm()">Ouvrir le formulaire →</button>
+    </div>
   </div>
 </div>
 
-<form id="visitForm" class="form-wrap" onsubmit="return false;">
+<!-- ═══════════════ FORM PAGE ═══════════════ -->
+<div id="formPage">
 
-  <!-- SECTION 1 : INFOS DU BIEN -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">🏠</div>
-      <div>
-        <div class="section-title">Informations du bien</div>
-        <div class="section-sub">Adresse, type, surface et prix</div>
-      </div>
+  <div class="top-bar">
+    <div class="top-bar-left">
+      <span class="top-bar-flag" id="topFlag">🇫🇷</span>
+      <span class="top-bar-name" id="topName">France</span>
     </div>
-
-    <div style="margin-bottom:16px;">
-      <div class="field" style="margin-bottom:8px;">
-        <label>Type de bien</label>
-      </div>
-      <div class="type-grid" id="typeGrid">
-        <label class="type-btn selected" onclick="selectType(this,'Appartement')">
-          <input type="radio" name="type" value="Appartement" checked />
-          <div class="icon">🏢</div>
-          <div class="label">Appartement</div>
-        </label>
-        <label class="type-btn" onclick="selectType(this,'Maison')">
-          <input type="radio" name="type" value="Maison" />
-          <div class="icon">🏡</div>
-          <div class="label">Maison</div>
-        </label>
-        <label class="type-btn" onclick="selectType(this,'Studio')">
-          <input type="radio" name="type" value="Studio" />
-          <div class="icon">🛏</div>
-          <div class="label">Studio</div>
-        </label>
-        <label class="type-btn" onclick="selectType(this,'Local commercial')">
-          <input type="radio" name="type" value="Local commercial" />
-          <div class="icon">🏬</div>
-          <div class="label">Local comm.</div>
-        </label>
-      </div>
-    </div>
-
-    <div class="field mt16" style="margin-bottom:16px;">
-      <label>Adresse complète</label>
-      <input type="text" name="adresse" placeholder="Ex : 12 rue des Lilas, 75011 Paris" />
-    </div>
-
-    <div class="grid-3">
-      <div class="field">
-        <label>Surface (m²)</label>
-        <input type="number" name="surface" placeholder="65" min="0" />
-      </div>
-      <div class="field">
-        <label>Nb. de pièces</label>
-        <input type="number" name="pieces" placeholder="3" min="0" />
-      </div>
-      <div class="field">
-        <label>Étage</label>
-        <input type="text" name="etage" placeholder="3 / 5" />
-      </div>
-    </div>
-
-    <div class="grid-2 mt16">
-      <div class="field">
-        <label>Prix demandé</label>
-        <input type="text" name="prix" placeholder="280 000 €  /  1 500 €/mois" />
-      </div>
-      <div class="field">
-        <label>Prix au m²</label>
-        <input type="text" name="prix_m2" placeholder="Calculé automatiquement" id="prix_m2_field" readonly />
-      </div>
-    </div>
-
-    <div class="grid-2 mt16">
-      <div class="field">
-        <label>Date de visite</label>
-        <input type="date" name="date_visite" id="dateVisit" />
-      </div>
-      <div class="field">
-        <label>Agent / Contact</label>
-        <input type="text" name="agent" placeholder="Nom de l'agent ou agence" />
-      </div>
-    </div>
-
-    <div class="grid-2 mt16">
-      <div class="field">
-        <label>Exposition</label>
-        <select name="exposition">
-          <option value="">— Choisir —</option>
-          <option>Nord</option><option>Sud</option>
-          <option>Est</option><option>Ouest</option>
-          <option>Nord-Est</option><option>Nord-Ouest</option>
-          <option>Sud-Est</option><option>Sud-Ouest</option>
-        </select>
-      </div>
-      <div class="field">
-        <label>DPE (classe énergie)</label>
-        <select name="dpe">
-          <option value="">— Choisir —</option>
-          <option>A</option><option>B</option><option>C</option>
-          <option>D</option><option>E</option><option>F</option><option>G</option>
-        </select>
-      </div>
+    <div class="top-bar-right">
+      <button class="lang-btn" onclick="setLang('fr')">🇫🇷 FR</button>
+      <button class="lang-btn" onclick="setLang('en')">🇬🇧 EN</button>
+      <button class="lang-btn" onclick="setLang('th')">🇹🇭 TH</button>
+      <button class="btn-back" onclick="goBack()">← Accueil</button>
     </div>
   </div>
 
-  <!-- SECTION 2 : ÉTAT GÉNÉRAL / NOTATION PAR PIÈCE -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">⭐</div>
-      <div>
-        <div class="section-title">État général — notation par pièce</div>
-        <div class="section-sub">Notez chaque espace de 1 à 5 étoiles</div>
-      </div>
-    </div>
-
-    <div class="star-field" id="starField">
-      <!-- generated by JS -->
-    </div>
-
-    <div class="score-display" id="scoreDisplay">
-      <div>
-        <div class="score-num" id="scoreNum">—</div>
-        <div class="score-label">/ 5.0</div>
-      </div>
-      <div class="score-bar-wrap">
-        <div class="score-label" style="color:rgba(245,240,232,0.6); margin-bottom:8px;">Score global</div>
-        <div class="score-bar"><div class="score-bar-fill" id="scoreBar"></div></div>
-        <div class="score-verdict" id="scoreVerdict">Notez les pièces ci-dessus</div>
-      </div>
-    </div>
-
-    <div class="field mt16">
-      <label>Commentaire général sur l'état</label>
-      <textarea name="comment_etat" placeholder="Ex : Bonne luminosité, cuisine à rénover, parquet en bon état…"></textarea>
+  <div class="hero">
+    <div class="hero-inner">
+      <div class="hero-label" data-i18n="hero_label">Fiche de visite</div>
+      <h1 data-i18n="hero_title">Rapport de visite <em>immobilière</em></h1>
+      <p data-i18n="hero_sub">Remplissez cette fiche pendant ou après chaque visite.</p>
     </div>
   </div>
 
-  <!-- SECTION 3 : POINTS CLÉS -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">📋</div>
-      <div>
-        <div class="section-title">Points clés</div>
-        <div class="section-sub">Atouts, défauts et travaux à prévoir</div>
+  <form id="visitForm" class="form-wrap" onsubmit="return false;">
+
+    <!-- SECTION 1: INFOS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🏠</div>
+        <div>
+          <div class="section-title" data-i18n="s1_title">Informations du bien</div>
+          <div class="section-sub" data-i18n="s1_sub">Adresse, type, surface et prix</div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-bottom:9px;"><label data-i18n="lbl_type">Type de bien</label></div>
+      <div class="type-grid">
+        <label class="type-btn selected" onclick="selectType(this)"><input type="radio" name="type" value="apt" checked/><div class="icon">🏢</div><div class="lbl" data-i18n="type_apt">Appartement</div></label>
+        <label class="type-btn" onclick="selectType(this)"><input type="radio" name="type" value="house"/><div class="icon">🏡</div><div class="lbl" data-i18n="type_house">Maison</div></label>
+        <label class="type-btn" onclick="selectType(this)"><input type="radio" name="type" value="studio"/><div class="icon">🛏</div><div class="lbl" data-i18n="type_studio">Studio</div></label>
+        <label class="type-btn" onclick="selectType(this)"><input type="radio" name="type" value="commercial"/><div class="icon">🏬</div><div class="lbl" data-i18n="type_commercial">Local</div></label>
+      </div>
+
+      <div class="field mt14">
+        <label data-i18n="lbl_address">Adresse complète</label>
+        <input type="text" name="adresse" id="adresseInput" data-i18n-ph="ph_address" placeholder="12 rue des Lilas, 75011 Paris"/>
+      </div>
+      <button type="button" class="map-btn" onclick="showMap()" data-i18n="btn_map">📍 Voir sur la carte</button>
+      <div id="map"></div>
+
+      <div class="grid-3 mt14">
+        <div class="field"><label data-i18n="lbl_surface">Surface (m²)</label><input type="number" name="surface" id="surfInput" placeholder="65" min="0"/></div>
+        <div class="field"><label data-i18n="lbl_rooms">Pièces</label><input type="number" name="pieces" placeholder="3" min="0"/></div>
+        <div class="field"><label data-i18n="lbl_floor">Étage</label><input type="text" name="etage" placeholder="3/5"/></div>
+      </div>
+
+      <div class="grid-2 mt14">
+        <div class="field">
+          <label data-i18n="lbl_price">Prix demandé</label>
+          <input type="text" name="prix" id="prixInput" data-i18n-ph="ph_price" placeholder="280 000 €"/>
+        </div>
+        <div class="field">
+          <label data-i18n="lbl_date">Date de visite</label>
+          <input type="date" name="date_visite" id="dateVisit"/>
+        </div>
+      </div>
+
+      <!-- CONVERSION BOX -->
+      <div class="price-convert" id="priceConvert">
+        <div class="conv-header" data-i18n="conv_title">Conversion automatique des devises</div>
+        <div class="conv-grid">
+          <div class="conv-item">
+            <div class="conv-currency" id="convLbl1">EUR</div>
+            <div class="conv-amount" id="convAmt1">—</div>
+          </div>
+          <div class="conv-item">
+            <div class="conv-currency" id="convLbl2">USD</div>
+            <div class="conv-amount" id="convAmt2">—</div>
+          </div>
+          <div class="conv-item">
+            <div class="conv-currency" id="convLbl3">THB</div>
+            <div class="conv-amount" id="convAmt3">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRICE M2 BOX -->
+      <div class="price-m2-box" id="priceM2Box">
+        <div class="m2-header" data-i18n="m2_title">Prix au m²</div>
+        <div class="m2-grid">
+          <div class="m2-item"><div class="m2-label" id="m2Lbl1">€ / m²</div><div class="m2-value" id="m2Val1">—</div></div>
+          <div class="m2-item"><div class="m2-label">$ / m²</div><div class="m2-value" id="m2Val2">—</div></div>
+          <div class="m2-item"><div class="m2-label">฿ / m²</div><div class="m2-value" id="m2Val3">—</div></div>
+        </div>
+      </div>
+
+      <div class="grid-2 mt14">
+        <div class="field"><label data-i18n="lbl_agent">Agent / Contact</label><input type="text" name="agent" data-i18n-ph="ph_agent" placeholder="Nom de l'agence"/></div>
+        <div class="field">
+          <label data-i18n="lbl_expo">Exposition</label>
+          <select name="exposition">
+            <option value="" data-i18n="opt_choose">— Choisir —</option>
+            <option>N</option><option>S</option><option>E</option><option>O/W</option>
+            <option>NE</option><option>NO/NW</option><option>SE</option><option>SO/SW</option>
+          </select>
+        </div>
+      </div>
+      <div class="grid-2 mt10">
+        <div class="field">
+          <label data-i18n="lbl_dpe">DPE / Énergie</label>
+          <select name="dpe">
+            <option value="">—</option>
+            <option>A</option><option>B</option><option>C</option><option>D</option><option>E</option><option>F</option><option>G</option>
+          </select>
+        </div>
+        <div class="field"><label data-i18n="lbl_charges">Charges / mois</label><input type="text" name="charges" data-i18n-ph="ph_charges" placeholder="250 €/mois"/></div>
       </div>
     </div>
-    <div class="grid-2">
-      <div class="field">
-        <label>✅ Points positifs</label>
-        <textarea name="positifs" placeholder="Ex : Vue dégagée, double vitrage, quartier calme…"></textarea>
+
+    <!-- SECTION 2: NOTATION -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">⭐</div>
+        <div>
+          <div class="section-title" data-i18n="s2_title">État général — notation</div>
+          <div class="section-sub" data-i18n="s2_sub">1 à 5 étoiles par pièce</div>
+        </div>
       </div>
-      <div class="field">
-        <label>⚠️ Points négatifs</label>
-        <textarea name="negatifs" placeholder="Ex : Pas de parking, humidité visible, bruit…"></textarea>
+      <div id="starField"></div>
+      <div class="score-display">
+        <div>
+          <div class="score-num" id="scoreNum">—</div>
+          <div class="score-small">/ 5</div>
+        </div>
+        <div class="score-bar-wrap">
+          <div class="score-small" style="color:rgba(245,240,232,0.45);margin-bottom:5px;" data-i18n="score_global">Score global</div>
+          <div class="score-bar"><div class="score-bar-fill" id="scoreBar"></div></div>
+          <div class="score-verdict" id="scoreVerdict" data-i18n="score_hint">Notez les pièces</div>
+        </div>
       </div>
-    </div>
-    <div class="field mt16">
-      <label>🔨 Travaux estimés</label>
-      <input type="text" name="travaux" placeholder="Ex : Refaire la salle de bain — budget ~8 000 €" />
-    </div>
-  </div>
-
-  <!-- SECTION 4 : DÉCISION -->
-  <div class="section">
-    <div class="section-header">
-      <div class="section-icon">🎯</div>
-      <div>
-        <div class="section-title">Décision</div>
-        <div class="section-sub">Votre verdict après la visite</div>
+      <div class="field mt10">
+        <label data-i18n="lbl_comment">Commentaire général</label>
+        <textarea name="comment_etat" data-i18n-ph="ph_comment" placeholder="Luminosité, état général…"></textarea>
       </div>
     </div>
 
-    <div class="decision-grid" id="decisionGrid">
-      <label class="decision-btn" data-val="oui" onclick="selectDecision(this)">
-        <input type="radio" name="decision" value="oui" />
-        <div class="d-icon">✅</div>
-        <div class="d-label" style="color:var(--good)">Intéressé</div>
-      </label>
-      <label class="decision-btn" data-val="peut-etre" onclick="selectDecision(this)">
-        <input type="radio" name="decision" value="peut-etre" />
-        <div class="d-icon">🤔</div>
-        <div class="d-label" style="color:var(--neutral)">Peut-être</div>
-      </label>
-      <label class="decision-btn" data-val="non" onclick="selectDecision(this)">
-        <input type="radio" name="decision" value="non" />
-        <div class="d-icon">❌</div>
-        <div class="d-label" style="color:var(--bad)">Non retenu</div>
-      </label>
+    <!-- SECTION 3: POINTS CLÉS -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">📋</div>
+        <div>
+          <div class="section-title" data-i18n="s3_title">Points clés</div>
+          <div class="section-sub" data-i18n="s3_sub">Atouts, défauts, travaux</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="field"><label data-i18n="lbl_positifs">✅ Points positifs</label><textarea name="positifs" data-i18n-ph="ph_positifs" placeholder="Vue, calme…"></textarea></div>
+        <div class="field"><label data-i18n="lbl_negatifs">⚠️ Points négatifs</label><textarea name="negatifs" data-i18n-ph="ph_negatifs" placeholder="Bruit, humidité…"></textarea></div>
+      </div>
+      <div class="field mt10">
+        <label data-i18n="lbl_travaux">🔨 Travaux estimés</label>
+        <input type="text" name="travaux" data-i18n-ph="ph_travaux" placeholder="Cuisine à refaire — ~8 000 €"/>
+      </div>
     </div>
 
-    <div class="field mt16">
-      <label>Notes personnelles</label>
-      <textarea name="notes" placeholder="Ex : Rappeler l'agent pour négocier le prix, revenir avec un plombier…"></textarea>
+    <!-- SECTION 4: DÉCISION -->
+    <div class="section">
+      <div class="section-header">
+        <div class="section-icon">🎯</div>
+        <div>
+          <div class="section-title" data-i18n="s4_title">Décision</div>
+          <div class="section-sub" data-i18n="s4_sub">Votre verdict</div>
+        </div>
+      </div>
+      <div class="decision-grid">
+        <label class="decision-btn" data-val="oui" onclick="selectDecision(this)"><input type="radio" name="decision" value="oui"/><div class="d-icon">✅</div><div class="d-label" style="color:var(--good)" data-i18n="dec_yes">Intéressé</div></label>
+        <label class="decision-btn" data-val="peut-etre" onclick="selectDecision(this)"><input type="radio" name="decision" value="peut-etre"/><div class="d-icon">🤔</div><div class="d-label" style="color:var(--neutral)" data-i18n="dec_maybe">Peut-être</div></label>
+        <label class="decision-btn" data-val="non" onclick="selectDecision(this)"><input type="radio" name="decision" value="non"/><div class="d-icon">❌</div><div class="d-label" style="color:var(--bad)" data-i18n="dec_no">Non retenu</div></label>
+      </div>
+      <div class="field mt10">
+        <label data-i18n="lbl_notes">Notes personnelles</label>
+        <textarea name="notes" data-i18n-ph="ph_notes" placeholder="Prochaines étapes…"></textarea>
+      </div>
     </div>
-  </div>
 
-  <!-- SUBMIT -->
-  <div class="submit-wrap">
-    <button class="btn-submit" onclick="generateReport()">
-      <span>Générer le rapport</span>
-    </button>
-  </div>
-
-  <!-- RESULT -->
-  <div id="result">
-    <h2>📄 Rapport de visite</h2>
-    <pre id="resultText"></pre>
-    <div class="result-actions">
-      <button class="btn-action" onclick="copyReport()">📋 Copier</button>
-      <button class="btn-action" onclick="printPage()">🖨 Imprimer</button>
-      <button class="btn-action" onclick="newVisit()">➕ Nouvelle visite</button>
+    <div class="submit-wrap">
+      <button class="btn-submit" onclick="generateReport()"><span data-i18n="btn_generate">Générer le rapport</span></button>
     </div>
-  </div>
 
-</form>
+    <div id="result">
+      <h2>📄 <span data-i18n="result_title">Rapport de visite</span></h2>
+      <pre id="resultText"></pre>
+      <div class="result-actions">
+        <button class="btn-action" onclick="copyReport()">📋 <span data-i18n="btn_copy">Copier</span></button>
+        <button class="btn-action" onclick="printPage()">🖨 <span data-i18n="btn_print">Imprimer</span></button>
+        <button class="btn-action" onclick="resetForm()">➕ <span data-i18n="btn_new">Nouvelle visite</span></button>
+      </div>
+    </div>
+
+  </form>
+</div>
 
 <script>
-  // ---- DATE AUTO ----
-  document.getElementById('dateVisit').valueAsDate = new Date();
+/* ══════════════════════════════════════
+   RATES (approximate hardcoded rates)
+   Update periodically for accuracy
+══════════════════════════════════════ */
+const R = { EUR_USD:1.08, EUR_THB:38.5, THB_EUR:0.026, THB_USD:0.028 };
 
-  // ---- TYPE SELECTION ----
-  function selectType(el, val) {
-    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
+const COUNTRIES = {
+  fr:{ flag:'🇫🇷', name:'France',    cur:'EUR', sym:'€' },
+  pt:{ flag:'🇵🇹', name:'Portugal',  cur:'EUR', sym:'€' },
+  th:{ flag:'🇹🇭', name:'Thaïlande', cur:'THB', sym:'฿' }
+};
+
+/* ══════════════════════════════════════ TRANSLATIONS */
+const T = {
+fr:{
+  hero_label:'Fiche de visite', hero_title:'Rapport de visite <em>immobilière</em>',
+  hero_sub:'Remplissez cette fiche pendant ou après chaque visite.',
+  s1_title:'Informations du bien', s1_sub:'Adresse, type, surface et prix',
+  lbl_type:'Type de bien', type_apt:'Appartement', type_house:'Maison', type_studio:'Studio', type_commercial:'Local',
+  lbl_address:'Adresse complète', ph_address:'12 rue des Lilas, 75011 Paris',
+  btn_map:'📍 Voir sur la carte',
+  lbl_surface:'Surface (m²)', lbl_rooms:'Pièces', lbl_floor:'Étage',
+  lbl_price:'Prix demandé', ph_price:'280 000 €',
+  lbl_date:'Date de visite', lbl_agent:'Agent / Contact', ph_agent:"Nom de l'agence",
+  lbl_expo:'Exposition', lbl_dpe:'DPE', opt_choose:'— Choisir —',
+  lbl_charges:'Charges / mois', ph_charges:'250 €/mois',
+  conv_title:'Conversion automatique des devises', m2_title:'Prix au m²',
+  s2_title:'État général — notation', s2_sub:'1 à 5 étoiles par pièce',
+  score_global:'Score global', score_hint:'Notez les pièces ci-dessus',
+  score_excellent:'🌟 Excellent bien', score_good:'👍 Bien intéressant',
+  score_neutral:'🤔 Quelques réserves', score_bad:'⚠️ Nombreux défauts',
+  lbl_comment:'Commentaire général', ph_comment:'Luminosité, état général…',
+  s3_title:'Points clés', s3_sub:'Atouts, défauts, travaux',
+  lbl_positifs:'✅ Points positifs', ph_positifs:'Vue, calme…',
+  lbl_negatifs:'⚠️ Points négatifs', ph_negatifs:'Bruit, humidité…',
+  lbl_travaux:'🔨 Travaux estimés', ph_travaux:'Cuisine à refaire — ~8 000 €',
+  s4_title:'Décision', s4_sub:'Votre verdict',
+  dec_yes:'Intéressé', dec_maybe:'Peut-être', dec_no:'Non retenu',
+  lbl_notes:'Notes personnelles', ph_notes:'Prochaines étapes…',
+  btn_generate:'Générer le rapport', result_title:'Rapport de visite',
+  btn_copy:'Copier', btn_print:'Imprimer', btn_new:'Nouvelle visite',
+  confirm_reset:'Réinitialiser le formulaire ?', copied:'Rapport copié !',
+  rooms:['Salon / Séjour','Cuisine','Chambre principale','Chambre 2','Salle de bain','WC','Entrée','Extérieur / Balcon'],
+  star_ph:'commentaire…',
+  rh:'FICHE DE VISITE IMMOBILIÈRE',
+  rt:'Type',ra:'Adresse',rd:'Date',rag:'Agent',rs:'Surface',rr:'Pièces',rf:'Étage',
+  re:'Exposition',rdpe:'DPE',rp:'Prix',rconv:'Conversions',rm2:'Prix au m²',
+  rrating:'NOTATION PAR PIÈCE',rscore:'Score',retat:'État général',rkeys:'POINTS CLÉS',
+  rpos:'Positifs',rneg:'Négatifs',rworks:'Travaux',rdec:'DÉCISION',rnotes:'Notes',
+  dl:{ oui:'✅ Intéressé','peut-etre':'🤔 Peut-être', non:'❌ Non retenu' },
+  na:'—', unrated:'(non noté)', nonotes:'(aucune note)',
+  tl:{ apt:'Appartement', house:'Maison', studio:'Studio', commercial:'Local commercial' }
+},
+en:{
+  hero_label:'Visit report', hero_title:'Property visit <em>report</em>',
+  hero_sub:'Fill in this form during or after each visit.',
+  s1_title:'Property information', s1_sub:'Address, type, area and price',
+  lbl_type:'Property type', type_apt:'Apartment', type_house:'House', type_studio:'Studio', type_commercial:'Commercial',
+  lbl_address:'Full address', ph_address:'123 Main St, Bangkok 10110',
+  btn_map:'📍 View on map',
+  lbl_surface:'Area (m²)', lbl_rooms:'Rooms', lbl_floor:'Floor',
+  lbl_price:'Asking price', ph_price:'5,000,000 ฿',
+  lbl_date:'Visit date', lbl_agent:'Agent / Contact', ph_agent:'Agent or agency name',
+  lbl_expo:'Orientation', lbl_dpe:'Energy rating', opt_choose:'— Choose —',
+  lbl_charges:'Monthly charges', ph_charges:'250 €/month',
+  conv_title:'Automatic currency conversion', m2_title:'Price per m²',
+  s2_title:'Condition — room ratings', s2_sub:'1 to 5 stars per room',
+  score_global:'Overall score', score_hint:'Rate the rooms above',
+  score_excellent:'🌟 Excellent property', score_good:'👍 Interesting',
+  score_neutral:'🤔 Some reservations', score_bad:'⚠️ Many issues',
+  lbl_comment:'General comment', ph_comment:'Natural light, overall condition…',
+  s3_title:'Key points', s3_sub:'Pros, cons and works',
+  lbl_positifs:'✅ Pros', ph_positifs:'View, quiet…',
+  lbl_negatifs:'⚠️ Cons', ph_negatifs:'Noise, dampness…',
+  lbl_travaux:'🔨 Estimated works', ph_travaux:'Kitchen renovation — ~8,000 €',
+  s4_title:'Decision', s4_sub:'Your verdict',
+  dec_yes:'Interested', dec_maybe:'Maybe', dec_no:'Not retained',
+  lbl_notes:'Personal notes', ph_notes:'Next steps…',
+  btn_generate:'Generate report', result_title:'Visit report',
+  btn_copy:'Copy', btn_print:'Print', btn_new:'New visit',
+  confirm_reset:'Reset the form?', copied:'Report copied!',
+  rooms:['Living room','Kitchen','Master bedroom','Bedroom 2','Bathroom','Toilet','Entrance','Exterior / Balcony'],
+  star_ph:'comment…',
+  rh:'PROPERTY VISIT REPORT',
+  rt:'Type',ra:'Address',rd:'Date',rag:'Agent',rs:'Area',rr:'Rooms',rf:'Floor',
+  re:'Orientation',rdpe:'Energy',rp:'Price',rconv:'Conversions',rm2:'Price/m²',
+  rrating:'ROOM RATINGS',rscore:'Score',retat:'Condition',rkeys:'KEY POINTS',
+  rpos:'Pros',rneg:'Cons',rworks:'Works',rdec:'DECISION',rnotes:'Notes',
+  dl:{ oui:'✅ Interested','peut-etre':'🤔 Maybe', non:'❌ Not retained' },
+  na:'—', unrated:'(not rated)', nonotes:'(no notes)',
+  tl:{ apt:'Apartment', house:'House', studio:'Studio', commercial:'Commercial' }
+},
+th:{
+  hero_label:'แบบฟอร์มการเยี่ยมชม', hero_title:'รายงานการเยี่ยมชม <em>อสังหาริมทรัพย์</em>',
+  hero_sub:'กรอกแบบฟอร์มนี้ระหว่างหรือหลังการเยี่ยมชมแต่ละครั้ง',
+  s1_title:'ข้อมูลอสังหาริมทรัพย์', s1_sub:'ที่อยู่ ประเภท ขนาด และราคา',
+  lbl_type:'ประเภท', type_apt:'คอนโด', type_house:'บ้าน', type_studio:'สตูดิโอ', type_commercial:'พาณิชย์',
+  lbl_address:'ที่อยู่เต็ม', ph_address:'123 ถ.สุขุมวิท กรุงเทพฯ 10110',
+  btn_map:'📍 ดูบนแผนที่',
+  lbl_surface:'พื้นที่ (ตร.ม.)', lbl_rooms:'จำนวนห้อง', lbl_floor:'ชั้น',
+  lbl_price:'ราคาที่ขอ', ph_price:'5,000,000 ฿',
+  lbl_date:'วันที่เยี่ยมชม', lbl_agent:'ตัวแทน', ph_agent:'ชื่อตัวแทนหรือบริษัท',
+  lbl_expo:'ทิศทาง', lbl_dpe:'พลังงาน', opt_choose:'— เลือก —',
+  lbl_charges:'ค่าใช้จ่าย/เดือน', ph_charges:'5,000 ฿/เดือน',
+  conv_title:'การแปลงสกุลเงินอัตโนมัติ', m2_title:'ราคาต่อตร.ม.',
+  s2_title:'สภาพทั่วไป — คะแนน', s2_sub:'1-5 ดาวต่อห้อง',
+  score_global:'คะแนนรวม', score_hint:'ให้คะแนนห้องด้านบน',
+  score_excellent:'🌟 ยอดเยี่ยม', score_good:'👍 น่าสนใจ',
+  score_neutral:'🤔 มีข้อสงสัย', score_bad:'⚠️ มีปัญหามาก',
+  lbl_comment:'ความคิดเห็นทั่วไป', ph_comment:'แสงสว่าง สภาพทั่วไป…',
+  s3_title:'จุดสำคัญ', s3_sub:'ข้อดี ข้อเสีย งานซ่อม',
+  lbl_positifs:'✅ ข้อดี', ph_positifs:'วิว, เงียบสงบ…',
+  lbl_negatifs:'⚠️ ข้อเสีย', ph_negatifs:'เสียงรบกวน, ความชื้น…',
+  lbl_travaux:'🔨 งานซ่อมแซม', ph_travaux:'เช่น: ปรับปรุงครัว',
+  s4_title:'การตัดสินใจ', s4_sub:'คำตัดสินของคุณ',
+  dec_yes:'สนใจ', dec_maybe:'อาจจะ', dec_no:'ไม่สนใจ',
+  lbl_notes:'บันทึกส่วนตัว', ph_notes:'ขั้นตอนต่อไป…',
+  btn_generate:'สร้างรายงาน', result_title:'รายงานการเยี่ยมชม',
+  btn_copy:'คัดลอก', btn_print:'พิมพ์', btn_new:'การเยี่ยมชมใหม่',
+  confirm_reset:'รีเซ็ตแบบฟอร์ม?', copied:'คัดลอกรายงานแล้ว!',
+  rooms:['ห้องนั่งเล่น','ครัว','ห้องนอนหลัก','ห้องนอน 2','ห้องน้ำ','ห้องสุขา','ทางเข้า','ระเบียง/สวน'],
+  star_ph:'ความคิดเห็น…',
+  rh:'รายงานการเยี่ยมชมอสังหาริมทรัพย์',
+  rt:'ประเภท',ra:'ที่อยู่',rd:'วันที่',rag:'ตัวแทน',rs:'พื้นที่',rr:'ห้อง',rf:'ชั้น',
+  re:'ทิศทาง',rdpe:'พลังงาน',rp:'ราคา',rconv:'การแปลงสกุลเงิน',rm2:'ราคา/ตร.ม.',
+  rrating:'คะแนนแต่ละห้อง',rscore:'คะแนน',retat:'สภาพทั่วไป',rkeys:'จุดสำคัญ',
+  rpos:'ข้อดี',rneg:'ข้อเสีย',rworks:'งานซ่อม',rdec:'การตัดสินใจ',rnotes:'บันทึก',
+  dl:{ oui:'✅ สนใจ','peut-etre':'🤔 อาจจะ', non:'❌ ไม่สนใจ' },
+  na:'—', unrated:'(ไม่ให้คะแนน)', nonotes:'(ไม่มีบันทึก)',
+  tl:{ apt:'คอนโดมิเนียม', house:'บ้าน', studio:'สตูดิโอ', commercial:'พาณิชย์' }
+}
+};
+
+/* ══════════════════════════════════════ STATE */
+let curCountry='fr', curLang='fr', selLang=null;
+const roomKeys=['sejour','cuisine','chambre1','chambre2','sdb','wc','entree','exterieur'];
+
+/* ══════════════════════════════════════ LANDING */
+function selectCountry(code){
+  curCountry=code;
+  document.querySelectorAll('.country-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('cc-'+code).classList.add('selected');
+  const s2=document.getElementById('step2');
+  s2.style.display='block'; s2.classList.add('fade-in');
+  document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
+  selLang=null;
+  document.getElementById('btnStart').classList.remove('visible');
+}
+function selectLang(lang){
+  selLang=lang;
+  document.querySelectorAll('.lang-card').forEach(c=>c.classList.remove('selected'));
+  document.getElementById('lc-'+lang).classList.add('selected');
+  document.getElementById('btnStart').classList.add('visible');
+  const lbs={fr:'Ouvrir le formulaire →',en:'Open the form →',th:'เปิดแบบฟอร์ม →'};
+  document.getElementById('btnStart').textContent=lbs[lang]||lbs.fr;
+}
+function startForm(){
+  if(!curCountry||!selLang)return;
+  curLang=selLang;
+  document.getElementById('landing').style.display='none';
+  const fp=document.getElementById('formPage');
+  fp.style.display='block'; fp.classList.add('fade-in');
+  const c=COUNTRIES[curCountry];
+  document.getElementById('topFlag').textContent=c.flag;
+  document.getElementById('topName').textContent=c.name;
+  updateLangBtns();
+  applyTrans();
+  rebuildStars();
+  updateConvLabels();
+  document.getElementById('dateVisit').valueAsDate=new Date();
+  window.scrollTo(0,0);
+}
+function goBack(){
+  document.getElementById('formPage').style.display='none';
+  document.getElementById('landing').style.display='flex';
+  window.scrollTo(0,0);
+}
+
+/* ══════════════════════════════════════ LANG */
+function setLang(l){ curLang=l; updateLangBtns(); applyTrans(); rebuildStars(); updateConvLabels(); calcConv(); }
+function updateLangBtns(){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  [{fr:0,en:1,th:2}[curLang]].forEach(i=>document.querySelectorAll('.lang-btn')[i]?.classList.add('active'));
+}
+function t(k){ return (T[curLang]||{})[k]||(T.fr||{})[k]||k; }
+function applyTrans(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const k=el.getAttribute('data-i18n');
+    if(T[curLang][k]!==undefined)el.innerHTML=T[curLang][k];
+  });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el=>{
+    const k=el.getAttribute('data-i18n-ph');
+    if(T[curLang][k]!==undefined)el.placeholder=T[curLang][k];
+  });
+  if(document.getElementById('scoreNum').textContent==='—')
+    document.getElementById('scoreVerdict').textContent=t('score_hint');
+}
+
+/* ══════════════════════════════════════ CURRENCY LABELS */
+function updateConvLabels(){
+  const isEUR=COUNTRIES[curCountry].cur==='EUR';
+  if(isEUR){
+    document.getElementById('convLbl1').textContent='EUR €';
+    document.getElementById('convLbl2').textContent='USD $';
+    document.getElementById('convLbl3').textContent='THB ฿';
+    document.getElementById('m2Lbl1').textContent='€ / m²';
+  } else {
+    document.getElementById('convLbl1').textContent='THB ฿';
+    document.getElementById('convLbl2').textContent='EUR €';
+    document.getElementById('convLbl3').textContent='USD $';
+    document.getElementById('m2Lbl1').textContent='฿ / m²';
+  }
+}
+
+/* ══════════════════════════════════════ CALC */
+document.getElementById('prixInput').addEventListener('input', calcConv);
+document.getElementById('surfInput').addEventListener('input', calcConv);
+
+function fmt(n){
+  if(n>=1000000) return (n/1000000).toFixed(2)+'M';
+  if(n>=1000) return Math.round(n).toLocaleString();
+  return Math.round(n).toString();
+}
+
+function calcConv(){
+  const raw=parseFloat(document.getElementById('prixInput').value.replace(/[^\d.]/g,''));
+  const surf=parseFloat(document.getElementById('surfInput').value);
+  const isEUR=COUNTRIES[curCountry].cur==='EUR';
+  const pc=document.getElementById('priceConvert');
+  const mb=document.getElementById('priceM2Box');
+
+  if(!raw||raw<=0){ pc.classList.remove('visible'); mb.classList.remove('visible'); return; }
+
+  const eur=isEUR?raw:raw*R.THB_EUR;
+  const usd=isEUR?raw*R.EUR_USD:raw*R.THB_USD;
+  const thb=isEUR?raw*R.EUR_THB:raw;
+
+  pc.classList.add('visible');
+
+  if(isEUR){
+    document.getElementById('convAmt1').innerHTML=fmt(eur)+'<span class="conv-sym">€</span>';
+    document.getElementById('convAmt2').innerHTML=fmt(usd)+'<span class="conv-sym">$</span>';
+    document.getElementById('convAmt3').innerHTML=fmt(thb)+'<span class="conv-sym">฿</span>';
+  } else {
+    document.getElementById('convAmt1').innerHTML=fmt(thb)+'<span class="conv-sym">฿</span>';
+    document.getElementById('convAmt2').innerHTML=fmt(eur)+'<span class="conv-sym">€</span>';
+    document.getElementById('convAmt3').innerHTML=fmt(usd)+'<span class="conv-sym">$</span>';
   }
 
-  // ---- PRIX M² AUTO ----
-  const surfaceInput = document.querySelector('[name="surface"]');
-  const prixInput    = document.querySelector('[name="prix"]');
-  function calcPrixM2() {
-    const s = parseFloat(surfaceInput.value);
-    const pStr = prixInput.value.replace(/[^\d]/g,'');
-    const p = parseFloat(pStr);
-    if (s > 0 && p > 0) {
-      document.getElementById('prix_m2_field').value = Math.round(p / s).toLocaleString('fr-FR') + ' €/m²';
+  if(surf>0){
+    mb.classList.add('visible');
+    if(isEUR){
+      document.getElementById('m2Val1').textContent=fmt(eur/surf)+' €';
+      document.getElementById('m2Val2').textContent=fmt(usd/surf)+' $';
+      document.getElementById('m2Val3').textContent=fmt(thb/surf)+' ฿';
     } else {
-      document.getElementById('prix_m2_field').value = '';
+      document.getElementById('m2Val1').textContent=fmt(thb/surf)+' ฿';
+      document.getElementById('m2Val2').textContent=fmt(eur/surf)+' €';
+      document.getElementById('m2Val3').textContent=fmt(usd/surf)+' $';
     }
-  }
-  surfaceInput.addEventListener('input', calcPrixM2);
-  prixInput.addEventListener('input', calcPrixM2);
+  } else mb.classList.remove('visible');
+}
 
-  // ---- STAR ROOMS ----
-  const rooms = [
-    { key:'sejour',    label:'Salon / Séjour' },
-    { key:'cuisine',   label:'Cuisine' },
-    { key:'chambre1',  label:'Chambre principale' },
-    { key:'chambre2',  label:'Chambre 2' },
-    { key:'sdb',       label:'Salle de bain' },
-    { key:'wc',        label:'WC' },
-    { key:'entree',    label:'Entrée / Couloir' },
-    { key:'exterieur', label:'Extérieur / Balcon / Jardin' },
-  ];
+/* ══════════════════════════════════════ MAP */
+function showMap(){
+  const addr=document.getElementById('adresseInput').value.trim();
+  const m=document.getElementById('map');
+  m.classList.add('visible');
+  if(!addr){m.innerHTML='<div style="padding:20px;color:var(--muted);text-align:center">'+t('ph_address')+'</div>';return;}
+  m.innerHTML=`<iframe src="https://maps.google.com/maps?q=${encodeURIComponent(addr)}&output=embed&z=15" allowfullscreen loading="lazy"></iframe>`;
+}
+document.getElementById('adresseInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();showMap();}});
 
-  const sf = document.getElementById('starField');
-  rooms.forEach(r => {
-    const row = document.createElement('div');
-    row.className = 'star-row';
-    row.innerHTML = `
-      <div class="star-name">${r.label}</div>
-      <div class="stars" id="stars_${r.key}">
-        ${[5,4,3,2,1].map(i => `
-          <input type="radio" name="room_${r.key}" id="r${r.key}_${i}" value="${i}" />
-          <label for="r${r.key}_${i}" title="${i} étoile${i>1?'s':''}">★</label>
-        `).join('')}
-      </div>
-      <input class="star-comment" type="text" name="comment_${r.key}" placeholder="commentaire…" />
+/* ══════════════════════════════════════ STARS */
+function rebuildStars(){
+  const sf=document.getElementById('starField');
+  const saved={};
+  roomKeys.forEach(k=>{
+    const c=document.querySelector(`[name="room_${k}"]:checked`);
+    const cm=document.querySelector(`[name="comment_${k}"]`);
+    saved[k]={v:c?c.value:null,c:cm?cm.value:''};
+  });
+  sf.innerHTML='';
+  (T[curLang].rooms||T.fr.rooms).forEach((label,idx)=>{
+    const key=roomKeys[idx];
+    const row=document.createElement('div');
+    row.className='star-row';
+    row.innerHTML=`
+      <div class="star-name">${label}</div>
+      <div class="stars">${[5,4,3,2,1].map(i=>`<input type="radio" name="room_${key}" id="r${key}${i}" value="${i}" ${saved[key]?.v==i?'checked':''}/><label for="r${key}${i}">★</label>`).join('')}</div>
+      <input class="star-comment" type="text" name="comment_${key}" placeholder="${t('star_ph')}" value="${saved[key]?.c||''}"/>
     `;
     sf.appendChild(row);
   });
+  document.querySelectorAll('.stars input').forEach(i=>i.addEventListener('change',updateScore));
+  updateScore();
+}
 
-  document.querySelectorAll('.stars input').forEach(inp => {
-    inp.addEventListener('change', updateScore);
+function updateScore(){
+  let total=0,count=0;
+  roomKeys.forEach(k=>{const c=document.querySelector(`[name="room_${k}"]:checked`);if(c){total+=parseInt(c.value);count++;}});
+  const avg=count?total/count:null;
+  document.getElementById('scoreNum').textContent=avg?avg.toFixed(1):'—';
+  document.getElementById('scoreBar').style.width=avg?(avg/5*100)+'%':'0%';
+  const v=document.getElementById('scoreVerdict');
+  if(!avg){v.textContent=t('score_hint');return;}
+  if(avg>=4)v.textContent=t('score_excellent');
+  else if(avg>=3)v.textContent=t('score_good');
+  else if(avg>=2)v.textContent=t('score_neutral');
+  else v.textContent=t('score_bad');
+}
+
+/* ══════════════════════════════════════ UI */
+function selectType(el){document.querySelectorAll('.type-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
+function selectDecision(el){document.querySelectorAll('.decision-btn').forEach(b=>b.classList.remove('selected'));el.classList.add('selected');}
+function g(n){const el=document.querySelector(`[name="${n}"]`);return el?el.value.trim():'';}
+
+/* ══════════════════════════════════════ REPORT */
+function generateReport(){
+  const L=T[curLang];
+  const c=COUNTRIES[curCountry];
+  const isEUR=c.cur==='EUR';
+  const tv=document.querySelector('[name="type"]:checked')?.value||'';
+  const raw=parseFloat(document.getElementById('prixInput').value.replace(/[^\d.]/g,''));
+  const surf=parseFloat(document.getElementById('surfInput').value);
+
+  let priceBlock='';
+  if(g('prix'))priceBlock+=`${L.rp.padEnd(14)}: ${g('prix')}\n`;
+  if(raw>0){
+    const eur=isEUR?raw:raw*R.THB_EUR;
+    const usd=isEUR?raw*R.EUR_USD:raw*R.THB_USD;
+    const thb=isEUR?raw*R.EUR_THB:raw;
+    priceBlock+=`${L.rconv.padEnd(14)}: ${fmt(eur)} € · ${fmt(usd)} $ · ${fmt(thb)} ฿\n`;
+    if(surf>0) priceBlock+=`${L.rm2.padEnd(14)}: ${fmt(eur/surf)} €/m² · ${fmt(usd/surf)} $/m² · ${fmt(thb/surf)} ฿/m²\n`;
+  }
+
+  let roomLines='';
+  (L.rooms||T.fr.rooms).forEach((label,idx)=>{
+    const key=roomKeys[idx];
+    const ch=document.querySelector(`[name="room_${key}"]:checked`);
+    const note=ch?'★'.repeat(parseInt(ch.value))+'☆'.repeat(5-parseInt(ch.value)):L.unrated;
+    const cm=g(`comment_${key}`);
+    roomLines+=`  ${label.padEnd(20)} ${note}${cm?' — '+cm:''}\n`;
   });
 
-  function updateScore() {
-    let total = 0, count = 0;
-    rooms.forEach(r => {
-      const checked = document.querySelector(`[name="room_${r.key}"]:checked`);
-      if (checked) { total += parseInt(checked.value); count++; }
-    });
-    const avg = count ? (total / count) : null;
-    const num = document.getElementById('scoreNum');
-    const bar = document.getElementById('scoreBar');
-    const verdict = document.getElementById('scoreVerdict');
-    if (avg !== null) {
-      num.textContent = avg.toFixed(1);
-      bar.style.width = (avg / 5 * 100) + '%';
-      if (avg >= 4) verdict.textContent = '🌟 Excellent bien';
-      else if (avg >= 3) verdict.textContent = '👍 Bien intéressant';
-      else if (avg >= 2) verdict.textContent = '🤔 Quelques réserves';
-      else verdict.textContent = '⚠️ Nombreux défauts';
-    } else {
-      num.textContent = '—';
-      bar.style.width = '0%';
-      verdict.textContent = 'Notez les pièces ci-dessus';
-    }
-  }
+  const dec=document.querySelector('[name="decision"]:checked')?.value||'';
+  const decL=dec?(L.dl[dec]||dec):L.na;
+  const score=document.getElementById('scoreNum').textContent;
 
-  // ---- DECISION ----
-  function selectDecision(el) {
-    document.querySelectorAll('.decision-btn').forEach(b => b.classList.remove('selected'));
-    el.classList.add('selected');
-  }
-
-  // ---- REPORT ----
-  function val(name) {
-    const el = document.querySelector(`[name="${name}"]`);
-    return el ? el.value.trim() : '';
-  }
-
-  function generateReport() {
-    const type    = document.querySelector('[name="type"]:checked')?.value || '';
-    const adresse = val('adresse') || '(non renseignée)';
-    const surface = val('surface');
-    const pieces  = val('pieces');
-    const etage   = val('etage');
-    const prix    = val('prix') || '(non renseigné)';
-    const prixM2  = document.getElementById('prix_m2_field').value;
-    const date    = val('date_visite');
-    const agent   = val('agent');
-    const expo    = val('exposition');
-    const dpe     = val('dpe');
-    const scoreN  = document.getElementById('scoreNum').textContent;
-
-    let roomLines = '';
-    rooms.forEach(r => {
-      const checked = document.querySelector(`[name="room_${r.key}"]:checked`);
-      const note = checked ? '★'.repeat(parseInt(checked.value)) + '☆'.repeat(5 - parseInt(checked.value)) : '(non noté)';
-      const comment = val(`comment_${r.key}`);
-      roomLines += `  ${r.label.padEnd(25)} ${note}${comment ? '  — ' + comment : ''}\n`;
-    });
-
-    const decision = document.querySelector('[name="decision"]:checked')?.value || 'non définie';
-    const decisionLabel = { oui: '✅ Intéressé', 'peut-etre': '🤔 Peut-être', non: '❌ Non retenu' }[decision] || '—';
-
-    const report = `
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  FICHE DE VISITE IMMOBILIÈRE
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Type       : ${type}
-Adresse    : ${adresse}
-Date       : ${date}  |  Agent : ${agent || '—'}
-Surface    : ${surface ? surface + ' m²' : '—'}  |  Pièces : ${pieces || '—'}  |  Étage : ${etage || '—'}
-Exposition : ${expo || '—'}  |  DPE : ${dpe || '—'}
-Prix       : ${prix}${prixM2 ? '  →  ' + prixM2 : ''}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  NOTATION PAR PIÈCE  (Score global : ${scoreN}/5)
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  const report=`
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ${L.rh}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${L.rt.padEnd(14)}: ${L.tl[tv]||tv}
+${L.ra.padEnd(14)}: ${g('adresse')||L.na}
+${L.rd.padEnd(14)}: ${g('date_visite')||L.na}   ${L.rag}: ${g('agent')||L.na}
+${L.rs.padEnd(14)}: ${g('surface')?g('surface')+' m²':L.na}   ${L.rr}: ${g('pieces')||L.na}   ${L.rf}: ${g('etage')||L.na}
+${L.re.padEnd(14)}: ${g('exposition')||L.na}   ${L.rdpe}: ${g('dpe')||L.na}
+${priceBlock}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ${L.rrating}   (${L.rscore}: ${score}/5)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ${roomLines}
-État général : ${val('comment_etat') || '—'}
+${L.retat}: ${g('comment_etat')||L.na}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  POINTS CLÉS
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-✅ Positifs : ${val('positifs') || '—'}
-⚠️  Négatifs : ${val('negatifs') || '—'}
-🔨 Travaux  : ${val('travaux') || '—'}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ${L.rkeys}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+✅ ${L.rpos}: ${g('positifs')||L.na}
+⚠️  ${L.rneg}: ${g('negatifs')||L.na}
+🔨 ${L.rworks}: ${g('travaux')||L.na}
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  DÉCISION : ${decisionLabel}
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-${val('notes') || '(aucune note)'}
-    `.trim();
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  ${L.rdec}: ${decL}
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+${g('notes')||L.nonotes}
+  `.trim();
 
-    document.getElementById('resultText').textContent = report;
-    const resultEl = document.getElementById('result');
-    resultEl.style.display = 'block';
-    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
+  document.getElementById('resultText').textContent=report;
+  const r=document.getElementById('result');
+  r.style.display='block';
+  r.scrollIntoView({behavior:'smooth',block:'start'});
+}
 
-  function copyReport() {
-    const text = document.getElementById('resultText').textContent;
-    navigator.clipboard.writeText(text).then(() => alert('Rapport copié !'));
-  }
-
-  function printPage() { window.print(); }
-
-  function newVisit() {
-    if (confirm('Réinitialiser le formulaire pour une nouvelle visite ?')) {
-      document.getElementById('visitForm').reset();
-      document.getElementById('result').style.display = 'none';
-      document.getElementById('scoreNum').textContent = '—';
-      document.getElementById('scoreBar').style.width = '0%';
-      document.getElementById('scoreVerdict').textContent = 'Notez les pièces ci-dessus';
-      document.getElementById('prix_m2_field').value = '';
-      document.getElementById('dateVisit').valueAsDate = new Date();
-      document.querySelectorAll('.type-btn').forEach((b,i) => b.classList.toggle('selected', i===0));
-      document.querySelectorAll('.decision-btn').forEach(b => b.classList.remove('selected'));
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  }
-
-  // Print style
-  const ps = document.createElement('style');
-  ps.media = 'print';
-  ps.textContent = '.hero,.submit-wrap,.result-actions,.btn-submit{display:none!important} #result{display:block!important; background:#fff; color:#000; border:1px solid #ccc;} .section{break-inside:avoid;}';
-  document.head.appendChild(ps);
+function copyReport(){ navigator.clipboard.writeText(document.getElementById('resultText').textContent).then(()=>alert(t('copied'))); }
+function printPage(){ window.print(); }
+function resetForm(){
+  if(!confirm(t('confirm_reset')))return;
+  document.getElementById('visitForm').reset();
+  document.getElementById('result').style.display='none';
+  document.getElementById('scoreNum').textContent='—';
+  document.getElementById('scoreBar').style.width='0%';
+  document.getElementById('dateVisit').valueAsDate=new Date();
+  document.querySelectorAll('.type-btn').forEach((b,i)=>b.classList.toggle('selected',i===0));
+  document.querySelectorAll('.decision-btn').forEach(b=>b.classList.remove('selected'));
+  document.getElementById('map').classList.remove('visible');
+  document.getElementById('priceConvert').classList.remove('visible');
+  document.getElementById('priceM2Box').classList.remove('visible');
+  rebuildStars();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
 </script>
 </body>
 </html>
